@@ -53,19 +53,7 @@ for i = 1:length(xs)-1
 
     % calculate Area driven potential using runge kutta 4th order
     M = Ms_area(i);
-    xn = x;
-    yn = M;
-    m1 = dp_area_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m1;
-    m2 = dp_area_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m2;
-    m3 = dp_area_M(xn,yn,constants);
-    xn = x+dt;
-    yn = M+dt*m3;
-    m4 = dp_area_M(xn,yn,constants);
-    Ms_area(i+1) = M + (dt*(m1+2*m2+2*m3+m4)) / 6;
+    Ms_area(i+1) = myRungeKutta4(dp_area_M,constants,M);
 
     % calculate Friction driven potential using runge kutta 4th order
     M = Ms_friction(i);

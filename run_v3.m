@@ -16,7 +16,7 @@ constants.R = 287; % J / kg * K
 constants.f_f = 0.025; % m
 constants.Q_dot = 500*1000; % J / s
 constants.L = 8.0; % m
-constants.dt = 0.25; % m
+constants.dx = 0.25; % m
 constants.c_p = (constants.gamma*constants.R) / (constants.gamma - 1); % section 1, page 8, cp constant for certain temperature range (ones we care about)
 
 % inlet conditions
@@ -37,10 +37,10 @@ constants.T_02 = constants.T_01 + constants.Q_dot / (constants.m_dot * constants
 % from problem statement, dT_0/dx is assumed constant from heating
 constants.dT_0_dx = (constants.T_02 - constants.T_01) / constants.L; % K / m
 
-dt = constants.dt;
+dx = constants.dx;
 L = constants.L;
 
-xs = 0:dt:constants.L;
+xs = 0:dx:constants.L;
 Ms_area     = zeros([1 length(xs)]);
 Ms_friction = zeros([1 length(xs)]);
 Ms_heat     = zeros([1 length(xs)]);
@@ -52,52 +52,13 @@ for i = 1:length(xs)-1
     x = xs(i);
 
     % calculate Area driven potential using runge kutta 4th order
-    M = Ms_area(i);
-    xn = x;
-    yn = M;
-    m1 = dp_area_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m1;
-    m2 = dp_area_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m2;
-    m3 = dp_area_M(xn,yn,constants);
-    xn = x+dt;
-    yn = M+dt*m3;
-    m4 = dp_area_M(xn,yn,constants);
-    Ms_area(i+1) = M + (dt*(m1+2*m2+2*m3+m4)) / 6;
+    Ms_area(i+1) = myRungeKutta4(@dp_area_M,constants,Ms_area(i),x,dx);
 
     % calculate Friction driven potential using runge kutta 4th order
-    M = Ms_friction(i);
-    xn = x;
-    yn = M;
-    m1 = dp_friction_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m1;
-    m2 = dp_friction_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m2;
-    m3 = dp_friction_M(xn,yn,constants);
-    xn = x+dt;
-    yn = M+dt*m3;
-    m4 = dp_friction_M(xn,yn,constants);
-    Ms_friction(i+1) = M + (dt*(m1+2*m2+2*m3+m4)) / 6;
+    Ms_friction(i+1) = myRungeKutta4(@dp_friction_M,constants,Ms_friction(i),x,dx);
 
     % calculate Heat driven potential using runge kutta 4th order
-    M = Ms_heat(i);
-    xn = x;
-    yn = M;
-    m1 = dp_heat_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m1;
-    m2 = dp_heat_M(xn,yn,constants);
-    xn = x+dt/2;
-    yn = M+(dt/2)*m2;
-    m3 = dp_heat_M(xn,yn,constants);
-    xn = x+dt;
-    yn = M+dt*m3;
-    m4 = dp_heat_M(xn,yn,constants);
-    Ms_heat(i+1) = M + (dt*(m1+2*m2+2*m3+m4)) / 6;
+    Ms_heat(i+1) = myRungeKutta4(@dp_heat_M,constants,Ms_heat(i),x,dx);
 end
 
 figure
