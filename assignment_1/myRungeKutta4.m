@@ -16,5 +16,5 @@ function Mout = myRungeKutta4(dp_ODE,constants,M,x,dx)
     yn = M+dx*m3;
     m4 = dp_ODE(xn,yn,constants);
 
-    Mout = M + ( dx*( m1 + 2*m2 + 2*m3 + m4 ) ) / 6;
+    Mout = M + ( m1 + 2*m2 + 2*m3 + m4 )*(dx/6);
 end
