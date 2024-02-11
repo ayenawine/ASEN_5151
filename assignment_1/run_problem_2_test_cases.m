@@ -111,9 +111,9 @@ Tx_ray = Tx_T1_ray.*constants.T_1;
 
 figure
 hold on 
-plot(xs,Tx_T1_area,"DisplayName",sprintf("Area Driven, Tx/T1_L = %.5f",Tx_T1_area(end)))
-plot(xs,Tx_T1_fan, "DisplayName",sprintf("Friction Driven, Tx/T1_L = %.5f",Tx_T1_fan(end)))
-plot(xs,Tx_T1_ray, "DisplayName",sprintf("Heat Driven, Tx/T1_L = %.5f",Tx_T1_ray(end)))
+plot(xs,Tx_T1_area,"DisplayName",sprintf("Area Change, Tx/T1_L = %.5f",Tx_T1_area(end)))
+plot(xs,Tx_T1_fan, "DisplayName",sprintf("Fanno, Tx/T1_L = %.5f",Tx_T1_fan(end)))
+plot(xs,Tx_T1_ray, "DisplayName",sprintf("Rayleigh, Tx/T1_L = %.5f",Tx_T1_ray(end)))
 legend("Location","best")
 title("T/T1, individual potentials")
 xlabel("Duct Length [m]")
@@ -125,15 +125,16 @@ grid
 % calculate velocity distribution
 Mx_area = sqrt(M2_area);
 Vx_V1_area = (Mx_area/constants.M_1).*sqrt(Tx_T1_area); % definition of Mach number, section 2, page 33
+V1_Vx_area = Vx_V1_area.^-1;
 %Vx = Vx_V1.*constants.V_1;
 
 % calculate density distribution
 Ax = pi * (constants.r_1-xs*tan(constants.alpha)).^2; % for converging duct
-A1_Ax = constants.A_1 ./ Ax;
-rhox_rho1_area = A1_Ax ./ (Vx_V1_area); % continuity equation, section 2, page 33
+A1_Ax_area = constants.A_1 ./ Ax;
+rhox_rho1_area = A1_Ax_area .* V1_Vx_area; % continuity equation, section 2, page 33
 
 % calculate pressure distribution
-Px_P1_area = rhox_rho1_area ./ Tx_T1_area; % equation of state, section 2, page 33
+Px_P1_area = rhox_rho1_area .* Tx_T1_area; % equation of state, section 2, page 33
 %Px_area = Px_P1_area * constants.P_1;
 
 %% calculate P/P1 for friction driving potential
@@ -145,10 +146,12 @@ Vx_V1_fan = (Mx_fan/constants.M_1).*sqrt(Tx_T1_fan); % definition of Mach number
 
 % calculate density distribution
 % assume area change is zero
-rhox_rho1_fan = 1 ./ (Vx_V1_fan); % continuity equation, section 2, page 33
+Ax = pi * (constants.r_1-xs*tan(0)).^2; % for converging duct
+A1_Ax_fan = constants.A_1 ./ Ax;
+rhox_rho1_fan = A1_Ax_fan ./ (Vx_V1_fan); % continuity equation, section 2, page 33
 
 % calculate pressure distribution
-Px_P1_fan = rhox_rho1_fan ./ Tx_T1_fan; % equation of state, section 2, page 33
+Px_P1_fan = rhox_rho1_fan .* Tx_T1_fan; % equation of state, section 2, page 33
 %Px_fan = Px_P1_fan * constants.P_1;
 
 %% calculate P/P1 for heat driving potential
@@ -160,18 +163,20 @@ Vx_V1_ray = (Mx_ray/constants.M_1).*sqrt(Tx_T1_ray); % definition of Mach number
 
 % calculate density distribution
 % assume area change is zero
-rhox_rho1_ray = 1 ./ (Vx_V1_ray); % continuity equation, section 2, page 33
+Ax = pi * (constants.r_1-xs*tan(0)).^2; % for converging duct
+A1_Ax_ray = constants.A_1 ./ Ax;
+rhox_rho1_ray = A1_Ax_ray ./ (Vx_V1_ray); % continuity equation, section 2, page 33
 
 % calculate pressure distribution
-Px_P1_ray = rhox_rho1_ray ./ Tx_T1_ray; % equation of state, section 2, page 33
+Px_P1_ray = rhox_rho1_ray .* Tx_T1_ray; % equation of state, section 2, page 33
 %Px_fan = Px_P1_ray * constants.P_1;
 
-% plot
+%% plot P/P1 for each driving potential
 figure
 hold on 
-plot(xs,Px_P1_area,"DisplayName",sprintf("Area Driven, Px/P1_L = %.5f",Px_P1_area(end)))
-plot(xs,Px_P1_fan,"DisplayName",sprintf("Friction Driven, Px/P1_L = %.5f",Px_P1_fan(end)))
-plot(xs,Px_P1_ray,"DisplayName",sprintf("Heat Driven, Px/P1_L = %.5f",Px_P1_ray(end)))
+plot(xs,Px_P1_area,"DisplayName",sprintf("Area Change, Px/P1_L = %.5f",Px_P1_area(end)))
+plot(xs,Px_P1_fan,"DisplayName",sprintf("Fanno, Px/P1_L = %.5f",Px_P1_fan(end)))
+plot(xs,Px_P1_ray,"DisplayName",sprintf("Rayleigh, Px/P1_L = %.5f",Px_P1_ray(end)))
 legend("Location","best")
 title("P/P1, individual potentials")
 xlabel("Duct Length [m]")

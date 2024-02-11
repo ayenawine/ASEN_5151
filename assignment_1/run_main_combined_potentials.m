@@ -132,7 +132,7 @@ for j = 1:length(dxs)
     rhox_rho1 = A1_Ax ./ Vx_V1; % continuity equation, section 2, page 33
     
     % calculate pressure distribution
-    Px_P1 = rhox_rho1 ./ Tx_T1; % equation of state, section 2, page 33
+    Px_P1 = rhox_rho1 .* Tx_T1; % equation of state, section 2, page 33
     Px = Px_P1 * constants.P_1;
     
     % calculate stagnation pressure distribution
