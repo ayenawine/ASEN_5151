@@ -1,12 +1,10 @@
-function dM2_dx = dp_fanno_M(x,M,constants)
+function dM2_dx = dp_friction_M(x,M,constants)
     p1 = (1+((constants.gamma-1)/2)*M);
 
     if constants.combined_potential == true
         if constants.converging == true
-            % converging duct
             D_h = 2*(constants.r_1-x*tan(constants.alpha));
         else
-            % diverging duct
             D_h = 2*(constants.r_1+x*tan(constants.alpha));
         end
     else
