@@ -27,21 +27,21 @@ f1 = figure(1);
 ylabel('Mach')
 xlabel('Duct Length [m]')
 title(sprintf("Mach, M_1=%.1f",constants.M_1))
-legend
+legend("Location","best")
 grid
 
 f2 = figure(2);
 ylabel('Ratio')
 xlabel('Duct Length [m]')
 title(sprintf("T/T_1, M_1=%.1f",constants.M_1))
-legend
+legend("Location","best")
 grid
 
 f3 = figure(3);
 ylabel('Ratio')
 xlabel('Duct Length [m]')
 title(sprintf("P/P_1, M_1=%.1f",constants.M_1))
-legend
+legend("Location","best")
 grid
 
 % outer loop to vary the dx step size
