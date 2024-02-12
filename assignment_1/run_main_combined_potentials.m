@@ -17,8 +17,8 @@ constants = {};
 constants.M_1 = 0.2;
 %constants.dx = 0.25; % m
 
-dxs = [0.25,0.5,1.0]; % input for problem 2
-%dxs = [0.5]; % input for problem 3
+%dxs = [0.25,0.5,1.0]; % input for problem 2
+dxs = [0.5]; % input for problem 3
 
 line_styles = ["-","-","-"];
 
@@ -123,13 +123,14 @@ for j = 1:length(dxs)
     
     % calculate velocity distribution
     Mx = sqrt(M2_combined);
-    Vx_V1 = (Mx/constants.M_1).*sqrt(Tx/constants.T_1); % definition of Mach number, section 2, page 33
+    Vx_V1 = (Mx/constants.M_1).*sqrt(Tx_T1); % definition of Mach number, section 2, page 33
+    V1_Vx = Vx_V1.^-1;
     Vx = Vx_V1.*constants.V_1;
     
     % calculate density distribution
-    Ax = pi.*(constants.r_1-xs*tan(constants.alpha)).^2; % for converging duct
+    Ax = pi * (constants.r_1-xs*tan(constants.alpha)).^2; % for converging duct
     A1_Ax = constants.A_1 ./ Ax;
-    rhox_rho1 = A1_Ax ./ Vx_V1; % continuity equation, section 2, page 33
+    rhox_rho1 = V1_Vx .* A1_Ax; % continuity equation, section 2, page 33
     
     % calculate pressure distribution
     Px_P1 = rhox_rho1 .* Tx_T1; % equation of state, section 2, page 33
@@ -137,7 +138,7 @@ for j = 1:length(dxs)
     
     % calculate stagnation pressure distribution
     % isentropic relation, section 2, page 33
-    P_0x = Px .* ( 1+((constants.gamma-1)/2)*constants.M_1^2 )^(constants.gamma/(constants.gamma-1));
+    P_0x = Px .* ( 1+((constants.gamma-1)/2)*Mx.^2 ).^(constants.gamma/(constants.gamma-1));
     P0x_P01 = P_0x ./ constants.P_01;
     
     for i = 1:length(xs)

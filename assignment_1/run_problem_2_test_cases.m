@@ -131,7 +131,7 @@ V1_Vx_area = Vx_V1_area.^-1;
 % calculate density distribution
 Ax = pi * (constants.r_1-xs*tan(constants.alpha)).^2; % for converging duct
 A1_Ax_area = constants.A_1 ./ Ax;
-rhox_rho1_area = A1_Ax_area .* V1_Vx_area; % continuity equation, section 2, page 33
+rhox_rho1_area = V1_Vx_area .* A1_Ax_area; % continuity equation, section 2, page 33
 
 % calculate pressure distribution
 Px_P1_area = rhox_rho1_area .* Tx_T1_area; % equation of state, section 2, page 33
@@ -148,7 +148,7 @@ Vx_V1_fan = (Mx_fan/constants.M_1).*sqrt(Tx_T1_fan); % definition of Mach number
 % assume area change is zero
 Ax = pi * (constants.r_1-xs*tan(0)).^2; % for converging duct
 A1_Ax_fan = constants.A_1 ./ Ax;
-rhox_rho1_fan = A1_Ax_fan ./ (Vx_V1_fan); % continuity equation, section 2, page 33
+rhox_rho1_fan = A1_Ax_fan ./ Vx_V1_fan; % continuity equation, section 2, page 33
 
 % calculate pressure distribution
 Px_P1_fan = rhox_rho1_fan .* Tx_T1_fan; % equation of state, section 2, page 33
@@ -163,7 +163,7 @@ Vx_V1_ray = (Mx_ray/constants.M_1).*sqrt(Tx_T1_ray); % definition of Mach number
 
 % calculate density distribution
 % assume area change is zero
-Ax = pi * (constants.r_1-xs*tan(0)).^2; % for converging duct
+Ax = pi * (constants.r_1-xs*tan(0)).^2; % assume area change is zero
 A1_Ax_ray = constants.A_1 ./ Ax;
 rhox_rho1_ray = A1_Ax_ray ./ (Vx_V1_ray); % continuity equation, section 2, page 33
 
